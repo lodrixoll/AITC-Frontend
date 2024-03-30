@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Registration() {
+function Login() {
     // Dummy function for handling "Forgot password" click
     const handleForgotPassword = () => {
         console.log("Forgot password clicked");
@@ -53,4 +53,4 @@ function Registration() {
     );
 }
 
-export default Registration;
+export default Login;
