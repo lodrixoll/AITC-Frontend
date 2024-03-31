@@ -6,12 +6,15 @@ module.exports = {
     extend: {
       colors: {
         customRed: '#ff0000', // red
+        customRedDarker: '#CC0000', // New darker red for hover state
         linkBlue: '#64b5f6', // new link color
       },
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      backgroundColor: ['hover'], // Ensure hover variant is enabled for backgroundColor
+    },
   },
   plugins: [],
 };
