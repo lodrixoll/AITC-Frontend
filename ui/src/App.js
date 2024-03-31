@@ -33,22 +33,35 @@ function App() {
 function RoutesContainer() {
   const location = useLocation();
 
+  // Check if the current location is a sidebar route
+  const isSidebarRoute = sidebarRoutes.some(route => route.path === location.pathname);
+
   return (
-    <TransitionGroup className="RoutesContainer">
-      <CSSTransition key={location.key} classNames="slide" timeout={350}>
-        <Routes location={location}>
-          {/* Non-sidebar routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Registration />} />
-          {/* Sidebar routes */}
-          {sidebarRoutes.map(({ path, Component }) => (
-            <Route key={path} path={path} element={<SidebarLayout><Component /></SidebarLayout>} />
-          ))}
-          {/* Redirect to login as default */}
-          <Route path="/" element={<Login />} />
-        </Routes>
-      </CSSTransition>
-    </TransitionGroup>
+      <TransitionGroup className="RoutesContainer">
+          {isSidebarRoute ? (
+              // Render without transition for sidebar routes
+              <Routes location={location}>
+                  {sidebarRoutes.map(({ path, Component }) => (
+                      <Route key={path} path={path} element={<SidebarLayout><Component /></SidebarLayout>} />
+                  ))}
+              </Routes>
+          ) : (
+              // Apply CSSTransition for non-sidebar routes
+              <CSSTransition key={location.key} classNames="slide" timeout={350}>
+                  <Routes location={location}>
+                      {/* Non-sidebar routes */}
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Registration />} />
+                      {/* Sidebar routes */}
+                      {sidebarRoutes.map(({ path, Component }) => (
+                          <Route key={path} path={path} element={<SidebarLayout><Component /></SidebarLayout>} />
+                      ))}
+                      {/* Redirect to login as default */}
+                      <Route path="/" element={<Login />} />
+                  </Routes>
+              </CSSTransition>
+          )}
+      </TransitionGroup>
   );
 }
 
