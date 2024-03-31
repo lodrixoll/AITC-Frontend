@@ -21,6 +21,7 @@ const sidebarRoutes = [
 ];
 
 function App() {
+
   return (
     <Router>
       <div className="App">
@@ -46,8 +47,8 @@ function RoutesContainer() {
                   ))}
               </Routes>
           ) : (
-              // Apply CSSTransition for non-sidebar routes
-              <CSSTransition key={location.key} classNames="slide" timeout={350}>
+              // Apply CSSTransition for non-sidebar routes with scale and fade effect
+              <CSSTransition key={location.key} classNames="scale-fade" timeout={500}>
                   <Routes location={location}>
                       {/* Non-sidebar routes */}
                       <Route path="/login" element={<Login />} />
