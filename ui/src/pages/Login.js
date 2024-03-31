@@ -32,7 +32,7 @@ function Login() {
                 throw new Error(data.message || 'An error occurred');
             }
             console.log(data.message); // Assuming the backend sends a success message
-            navigate('/home'); // Navigate to home on successful login
+            navigate('/dashboard'); // Navigate to dashboard on successful login
         } catch (error) {
             setError(error.message);
         }
@@ -75,7 +75,7 @@ function Login() {
                             <button type="button" className="font-medium text-linkBlue hover:text-blue-700" onClick={handleForgotPassword}>Forgot your password?</button>
                         </div>
                         <div className="text-sm">
-                            <button type="button" className="font-medium text-linkBlue hover:text-blue-700" onClick={handleStartFreeTrial}>Start a 14 day free trial</button>
+                            <button type="button" className="font-medium text-linkBlue hover:text-blue-700" onClick={handleStartFreeTrial}>Sign up for free</button>
                         </div>
                     </div>
                 </form>
