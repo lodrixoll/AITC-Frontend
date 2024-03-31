@@ -23,7 +23,7 @@ function Registration() {
 
             if (response.ok) {
                 console.log("Registration successful");
-                navigate('/home'); // Navigate to the home page
+                navigate('/dashboard'); // Navigate to the dashboard page
             } else if (response.status === 409) {
                 console.error("Email already in use");
                 setErrorMessage("Email already in use. Please try another email.");
