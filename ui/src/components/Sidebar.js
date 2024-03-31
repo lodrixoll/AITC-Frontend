@@ -1,21 +1,30 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { FaHome, FaExchangeAlt, FaEnvelope, FaCalendarAlt, FaCog } from 'react-icons/fa';
 
 function Sidebar() {
     const location = useLocation();
+    const navigate = useNavigate(); // Use useNavigate for redirection
+    const { setCurrentUser } = useAuth(); // Uncomment if using AuthContext to manage state
 
     const isActive = (path) => location.pathname === path;
+
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Remove the token from local storage
+        setCurrentUser(null); // Uncomment if using AuthContext to manage state
+        navigate('/login'); // Redirect to the login page
+    };
 
     return (
         <div className="w-64 min-h-screen bg-gray-800 text-white">
             <div className="flex items-center justify-between h-20 shadow-md px-5">
                 <h1 className="text-3xl font-semibold">AITC</h1>
-                <Link to="/" className="text-customRed hover:text-customRedDarker">
+                <button onClick={handleLogout} className="text-customRed hover:text-customRedDarker">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                </Link>
+                </button>
             </div>
             <ul className="flex flex-col py-4">
                 <li>

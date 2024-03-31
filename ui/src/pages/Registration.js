@@ -21,9 +21,12 @@ function Registration() {
                 body: JSON.stringify({ email, password }),
             });
 
+            const data = await response.json();
+
             if (response.ok) {
                 console.log("Registration successful");
-                navigate('/dashboard'); // Navigate to the dashboard page
+                localStorage.setItem('token', data.token);
+                navigate('/dashboard');
             } else if (response.status === 409) {
                 console.error("Email already in use");
                 setErrorMessage("Email already in use. Please try another email.");

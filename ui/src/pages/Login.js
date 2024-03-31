@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import '../App.css';
 
 function Login() {
+
     const navigate = useNavigate();
+    const { setCurrentUser } = useAuth();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -31,8 +35,10 @@ function Login() {
             if (!response.ok) {
                 throw new Error(data.message || 'An error occurred');
             }
-            console.log(data.message); // Assuming the backend sends a success message
-            navigate('/dashboard'); // Navigate to dashboard on successful login
+            console.log(data.message);
+            localStorage.setItem('token', data.token);
+            setCurrentUser({ token: data.token });
+            navigate('/dashboard');
         } catch (error) {
             setError(error.message);
         }

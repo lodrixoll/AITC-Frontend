@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate} from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
 import Dashboard from './pages/Dashboard';
@@ -25,18 +26,24 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <RoutesContainer />
+        <AuthProvider>
+          <RoutesContainer />
+        </AuthProvider>
       </div>
     </Router>
   );
 }
 
 function RoutesContainer() {
-  const location = useLocation();
 
-  // Check if the current location is a sidebar route
+  const { currentUser } = useAuth(); // Destructure currentUser from useAuth
+  const location = useLocation();
   const isSidebarRoute = sidebarRoutes.some(route => route.path === location.pathname);
 
+  if (isSidebarRoute && !currentUser) {
+      return <Navigate to="/login" replace />;
+  }
+  
   return (
       <TransitionGroup className="RoutesContainer">
           {isSidebarRoute ? (
