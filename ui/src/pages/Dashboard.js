@@ -1,26 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Sidebar from '../components/Sidebar';
 
-function HomePage() {
+function Dashboard() {
     return (
         <div className="flex min-h-screen bg-gray-100">
-            {/* Sidebar */}
-            <div className="w-64 bg-white shadow-md">
-                <div className="p-5 border-b border-gray-200">
-                    <h1 className="text-xl font-semibold text-gray-900">Real Estate Dashboard</h1>
-                </div>
-                <ul className="py-6">
-                    <li className="pl-6 py-2 hover:bg-gray-50">
-                        <Link to="/transactions" className="text-gray-700 hover:text-linkBlue">Transactions</Link>
-                    </li>
-                    <li className="pl-6 py-2 hover:bg-gray-50">
-                        <Link to="/emails" className="text-gray-700 hover:text-linkBlue">Emails</Link>
-                    </li>
-                    <li className="pl-6 py-2 hover:bg-gray-50">
-                        <Link to="/settings" className="text-gray-700 hover:text-linkBlue">Settings</Link>
-                    </li>
-                </ul>
-            </div>
+            <Sidebar />
             {/* Main Content */}
             <div className="flex-1 p-10">
                 <h2 className="text-3xl font-bold text-gray-800 mb-6">Overview</h2>
@@ -47,4 +31,4 @@ function HomePage() {
     );
 }
 
-export default HomePage;
+export default Dashboard;
