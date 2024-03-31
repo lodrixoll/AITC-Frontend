@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
-import './App.css'; // Ensure you have an App.css for the transitions
+import HomePage from './pages/HomePage';
+import './App.css';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function RoutesContainer() {
         <Routes location={location}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/" element={<Login />} />
         </Routes>
       </CSSTransition>
