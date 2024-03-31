@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
-import HomePage from './pages/HomePage';
+import Dashboard from './pages/Dashboard';
 import './App.css';
 
 function App() {
@@ -27,7 +27,7 @@ function RoutesContainer() {
         <Routes location={location}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/" element={<Login />} />
         </Routes>
       </CSSTransition>
