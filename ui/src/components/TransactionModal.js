@@ -1,21 +1,43 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FaFilePdf } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const TransactionModal = ({ isOpen, onClose }) => {
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
+    const [uploading, setUploading] = useState(false);
 
-    // Define the onDrop function
     const onDrop = useCallback(acceptedFiles => {
-        // Assuming the upload process is here and is successful
-        onClose(); // Close the modal
-        navigate('/transactions'); // Navigate to the transactions page
+        setUploading(true);
+        const file = acceptedFiles[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/upload`, {
+            method: 'POST',
+            body: formData,
+            // No need to set Content-Type in fetch with FormData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Assuming the server responds with JSON
+        })
+        .then(() => {
+            setUploading(false);
+            onClose();
+            navigate('/transactions');
+        })
+        .catch(() => {
+            setUploading(false);
+            // Handle error (e.g., show an error message)
+        });
     }, [navigate, onClose]);
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
-        accept: 'application/pdf', // Accept only PDF files
+        accept: 'application/pdf',
     });
 
     if (!isOpen) return null;
@@ -25,11 +47,12 @@ const TransactionModal = ({ isOpen, onClose }) => {
             <div className="relative top-10 mx-auto p-8 border w-1/2 shadow-2xl rounded-lg bg-white transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105" onClick={e => e.stopPropagation()}>
                 <div className="mt-3 text-center">
                     <FaFilePdf className="mx-auto text-red-500 text-6xl" />
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 mt-4">Upload Transaction PDF</h3>
+                    <h3 className="text-lg leading-6 font-medium text-gray-900 mt-4">New Transaction</h3>
                     <div className="mt-2">
                         <div {...getRootProps({ className: 'dropzone' })} className="border-dashed border-4 border-gray-300 rounded-lg p-4">
                             <input {...getInputProps()} />
-                            <p className="text-gray-600">Drag 'n' drop some files here, or click to select files</p>
+                            <p className="text-gray-600">Add Purchase Agreement PDF</p>
+                            {uploading && <p>Uploading...</p>}
                         </div>
                     </div>
                     <div className="items-center px-4 py-3">
