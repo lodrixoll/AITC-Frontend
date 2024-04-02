@@ -12,11 +12,11 @@ const Transactions = () => {
 
     // Static data for prepopulated transactions
     const staticTransactions = [
-        { id: 1, Seller: "Alex Johnson", "Listing Agent": "Samantha Right", "Listing Broker": "Keller Williams Realty", Buyer: "Jordan Smith", "Buyer's Agent": "Michael Brown", "Buyer's Broker": "Coldwell Banker" },
-        { id: 2, Seller: "Emily Turner", "Listing Agent": "Lucas Graham", "Listing Broker": "Century 21", Buyer: "Olivia King", "Buyer's Agent": "Sophia Carter", "Buyer's Broker": "RE/MAX" },
-        { id: 3, Seller: "William Davis", "Listing Agent": "Emma Wilson", "Listing Broker": "Berkshire Hathaway", Buyer: "Mason Miller", "Buyer's Agent": "Isabella Garcia", "Buyer's Broker": "Sotheby's International Realty" },
-        { id: 4, Seller: "Ava Moore", "Listing Agent": "Ethan Taylor", "Listing Broker": "Redfin", Buyer: "Isabella Garcia", "Buyer's Agent": "Noah Anderson", "Buyer's Broker": "Compass" },
-        { id: 5, Seller: "Sophia Carter", "Listing Agent": "Oliver Martinez", "Listing Broker": "eXp Realty", Buyer: "Mia Hernandez", "Buyer's Agent": "Charlotte Gonzalez", "Buyer's Broker": "The Agency" },
+        { id: 1, address: "123 Maple Street", Seller: "Alex Johnson", "Listing Agent": "Samantha Right", "Listing Broker": "Keller Williams Realty", Buyer: "Jordan Smith", "Buyer's Agent": "Michael Brown", "Buyer's Broker": "Coldwell Banker" },
+        { id: 2, address: "456 Oak Avenue", Seller: "Emily Turner", "Listing Agent": "Lucas Graham", "Listing Broker": "Century 21", Buyer: "Olivia King", "Buyer's Agent": "Sophia Carter", "Buyer's Broker": "RE/MAX" },
+        { id: 3, address: "789 Pine Road", Seller: "William Davis", "Listing Agent": "Emma Wilson", "Listing Broker": "Berkshire Hathaway", Buyer: "Mason Miller", "Buyer's Agent": "Isabella Garcia", "Buyer's Broker": "Sotheby's International Realty" },
+        { id: 4, address: "1011 Birch Lane", Seller: "Ava Moore", "Listing Agent": "Ethan Taylor", "Listing Broker": "Redfin", Buyer: "Isabella Garcia", "Buyer's Agent": "Noah Anderson", "Buyer's Broker": "Compass" },
+        { id: 5, address: "1213 Cedar Court", Seller: "Sophia Carter", "Listing Agent": "Oliver Martinez", "Listing Broker": "eXp Realty", Buyer: "Mia Hernandez", "Buyer's Agent": "Charlotte Gonzalez", "Buyer's Broker": "The Agency" },
     ];
 
     const toggleTransaction = (id) => {
@@ -62,18 +62,21 @@ const Transactions = () => {
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Transactions</h2>
             <div className="grid grid-cols-1 gap-4">
                 {ragResponse && <TransactionCard isLoading={isLoading} ragResponse={ragResponse} />}
-                {staticTransactions.map(transaction => (
-                    <div key={transaction.id} className="border p-4">
-                        {expandedTransactionId === transaction.id ? (
-                            <TransactionCard isLoading={false} ragResponse={transaction} />
-                        ) : (
-                            <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleTransaction(transaction.id)}>
-                                <span>Transaction {transaction.id}</span>
+                {staticTransactions.map(transaction => {
+                    const isExpanded = expandedTransactionId === transaction.id;
+                    return isExpanded ? (
+                        // Render the TransactionCard directly without additional wrapping when expanded
+                        <TransactionCard key={transaction.id} isLoading={false} ragResponse={transaction} />
+                    ) : (
+                        // Render the summary view with an option to expand
+                        <div key={transaction.id} className="border p-4 bg-white shadow-lg rounded-lg cursor-pointer transition duration-500 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl" onClick={() => toggleTransaction(transaction.id)}>
+                            <div className="flex justify-between items-center">
+                                <span className="text-xl font-bold">{transaction.address}</span>
                                 <span>▼</span>
                             </div>
-                        )}
-                    </div>
-                ))}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
