@@ -1,12 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { FaUserAlt, FaBuilding, FaPhone, FaEnvelope, FaUserTie, FaHome, FaPlusCircle } from 'react-icons/fa';
+import { FaUserAlt, FaBuilding, FaPhone, FaEnvelope, FaUserTie, FaHome, FaPlusCircle, FaTrash, FaTimes } from 'react-icons/fa';
 
 const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction }) => {
     const baseClass = "border bg-white shadow-lg rounded-lg transition-all duration-1000 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl";
     const expandedClass = expanded ? "max-h-screen p-6" : "max-h-24 p-4";
     const pointerClass = "cursor-pointer";
     const [contentOpacity, setContentOpacity] = useState(0);
-    const allowedKeys = ['Seller', 'Listing Agent', 'Listing Broker', 'Buyer', "Buyer's Agent", "Buyer's Broker"]; // Define allowed keys
+    const allowedKeys = ['Seller', 'Listing Agent', 'Listing Broker', 'Buyer', "Buyer's Agent", "Buyer's Broker"];
+
+    const handleDelete = async (id) => {
+
+        console.log('Deleting transaction with ID:', id);
+
+        const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/api/transactions/${id}`;
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'DELETE',
+            });
+            const data = await response.json();
+            if (response.ok) {
+                console.log(data.message);
+            } else {
+                console.error(data.message);
+            }
+        } catch (error) {
+            console.error('Failed to delete transaction:', error);
+        }
+    };
 
     useEffect(() => {
         let fadeTimeout;
@@ -23,7 +43,7 @@ const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction }
             <div className={`${baseClass} ${expandedClass} ${pointerClass}`} onClick={toggleTransaction}>
                 <div className="flex justify-between items-center">
                     <span className="text-xl font-bold">{ragResponse.address}</span>
-                    <span>▼</span>
+                    <FaTrash className="cursor-pointer text-red-500" onClick={() => handleDelete(ragResponse.id || ragResponse._id)} />
                 </div>
             </div>
         );
@@ -31,6 +51,10 @@ const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction }
 
     return (
         <div className={`${baseClass} ${expandedClass} ${pointerClass}`}>
+            <div className="flex justify-between">
+                <h3 className="text-xl font-bold text-gray-800">Transaction Details</h3>
+                <FaTimes className="cursor-pointer" onClick={toggleTransaction} />
+            </div>
             <div className="flex flex-wrap md:flex-nowrap -mx-4" style={{ opacity: contentOpacity, transition: 'opacity 200ms ease-in-out' }}>
                 <div className="w-full md:w-1/2 px-4 mb-6 md:mb-0 relative">
                     <h3 className="text-xl font-bold text-gray-800 mb-4">Contacts</h3>
