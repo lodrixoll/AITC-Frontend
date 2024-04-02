@@ -6,6 +6,7 @@ const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction }
     const expandedClass = expanded ? "max-h-screen p-6" : "max-h-24 p-4";
     const pointerClass = "cursor-pointer";
     const [contentOpacity, setContentOpacity] = useState(0);
+    const allowedKeys = ['Seller', 'Listing Agent', 'Listing Broker', 'Buyer', "Buyer's Agent", "Buyer's Broker"]; // Define allowed keys
 
     useEffect(() => {
         let fadeTimeout;
@@ -39,7 +40,7 @@ const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction }
                                 <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div>
                             </div>
                         ) : (
-                            Object.entries(ragResponse || {}).filter(([key]) => key !== 'id' && key !== 'address').map(([key, value], index) => (
+                            Object.entries(ragResponse || {}).filter(([key]) => allowedKeys.includes(key)).map(([key, value], index) => ( // Filter by allowed keys
                                 <div key={key} className="flex items-center bg-gray-100 p-3 rounded-lg shadow" style={{ opacity: contentOpacity, transition: `opacity 500ms ease-in-out ${index * 100}ms` }}>
                                     <div className="p-3 rounded-full bg-purple-500 text-white mr-4">
                                         {key === 'Seller' && <FaHome />}
