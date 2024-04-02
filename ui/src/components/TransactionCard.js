@@ -13,7 +13,7 @@ const TransactionCard = ({ isLoading, ragResponse }) => {
                                 <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div>
                             </div>
                         ) : (
-                            Object.entries(ragResponse || {}).map(([key, value]) => (
+                            Object.entries(ragResponse || {}).filter(([key]) => key !== 'id').map(([key, value]) => (
                                 <div key={key} className="flex items-center bg-gray-100 p-3 rounded-lg shadow">
                                     <div className="p-3 rounded-full bg-purple-500 text-white mr-4">
                                         {key === 'Seller' && <FaHome />}
