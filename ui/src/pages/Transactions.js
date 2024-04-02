@@ -21,7 +21,7 @@ const Transactions = () => {
         debounceRef.current = setTimeout(() => {
             if (uniqueId && uniqueId !== lastUniqueIdRef.current) {
                 setIsLoading(true);
-                fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag`, {
+                fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag/static`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -70,12 +70,14 @@ const Transactions = () => {
                                 ) : (
                                     Object.entries(ragResponse || {}).map(([key, value]) => (
                                         <div key={key} className="flex items-center bg-gray-100 p-3 rounded-lg shadow">
-                                            <div className="p-3 rounded-full bg-purple-500 text-white mr-4">
-                                                {key.includes('Seller') && <FaUserAlt />}
-                                                {key.includes('Agent') && <FaUserTie />}
-                                                {key.includes('Broker') && <FaBuilding />}
-                                                {key.includes('Home') && <FaHome />}
-                                            </div>
+                                        <div className="p-3 rounded-full bg-purple-500 text-white mr-4">
+                                            {key === 'Seller' && <FaHome />}
+                                            {key === 'Listing Agent' && <FaUserTie />}
+                                            {key === 'Listing Broker' && <FaBuilding />}
+                                            {key === 'Buyer' && <FaUserAlt/>}
+                                            {key === 'Buyer\'s Agent' && <FaUserTie />}
+                                            {key === 'Buyer\'s Broker' && <FaBuilding />}
+                                        </div>
                                             <div className="flex-grow">
                                                 <p className="font-bold">{key.replace(/_/g, ' ')}</p>
                                                 <p>{value}</p>
