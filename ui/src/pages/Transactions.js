@@ -21,6 +21,26 @@ const Transactions = () => {
         setIsModalOpen(true);
     };
 
+    const deleteTransaction = async (id) => {
+        console.log('Deleting transaction with ID:', id);
+        const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/api/transactions/${id}`;
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'DELETE',
+            });
+            const data = await response.json();
+            if (response.ok) {
+                console.log(data.message);
+                // Remove the deleted transaction from the state
+                setTransactions(transactions.filter(transaction => transaction.id !== id && transaction._id !== id));
+            } else {
+                console.error(data.message);
+            }
+        } catch (error) {
+            console.error('Failed to delete transaction:', error);
+        }
+    };
+
     useEffect(() => {
         setIsLoading(true);
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/transactions`)
@@ -75,7 +95,14 @@ const Transactions = () => {
             </button>
             <div className="grid grid-cols-1 gap-4">
                 {transactions.map(transaction => (
-                    <TransactionCard key={transaction.id || transaction._id} isLoading={isLoading} ragResponse={transaction} expanded={expandedTransactionId === transaction.id || expandedTransactionId === transaction._id} toggleTransaction={() => toggleTransaction(transaction.id || transaction._id)} />
+                    <TransactionCard 
+                        key={transaction.id || transaction._id} 
+                        isLoading={isLoading} 
+                        ragResponse={transaction} 
+                        expanded={expandedTransactionId === transaction.id || expandedTransactionId === transaction._id} 
+                        toggleTransaction={() => toggleTransaction(transaction.id || transaction._id)} 
+                        onDelete={deleteTransaction} 
+                    />
                 ))}
             </div>
             <TransactionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

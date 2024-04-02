@@ -1,32 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FaUserAlt, FaBuilding, FaPhone, FaEnvelope, FaUserTie, FaHome, FaPlusCircle, FaTrash, FaTimes } from 'react-icons/fa';
 
-const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction }) => {
+const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction, onDelete }) => {
     const baseClass = "border bg-white shadow-lg rounded-lg transition-all duration-1000 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl";
     const expandedClass = expanded ? "max-h-screen p-6" : "max-h-24 p-4";
     const pointerClass = "cursor-pointer";
     const [contentOpacity, setContentOpacity] = useState(0);
     const allowedKeys = ['Seller', 'Listing Agent', 'Listing Broker', 'Buyer', "Buyer's Agent", "Buyer's Broker"];
-
-    const handleDelete = async (id) => {
-
-        console.log('Deleting transaction with ID:', id);
-
-        const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/api/transactions/${id}`;
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'DELETE',
-            });
-            const data = await response.json();
-            if (response.ok) {
-                console.log(data.message);
-            } else {
-                console.error(data.message);
-            }
-        } catch (error) {
-            console.error('Failed to delete transaction:', error);
-        }
-    };
 
     useEffect(() => {
         let fadeTimeout;
@@ -43,7 +23,7 @@ const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction }
             <div className={`${baseClass} ${expandedClass} ${pointerClass}`} onClick={toggleTransaction}>
                 <div className="flex justify-between items-center">
                     <span className="text-xl font-bold">{ragResponse.address}</span>
-                    <FaTrash className="cursor-pointer text-red-500" onClick={() => handleDelete(ragResponse.id || ragResponse._id)} />
+                    <FaTrash className="cursor-pointer text-red-500" onClick={(e) => { e.stopPropagation(); onDelete(ragResponse.id || ragResponse._id); }} />
                 </div>
             </div>
         );
@@ -64,7 +44,7 @@ const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction }
                                 <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div>
                             </div>
                         ) : (
-                            Object.entries(ragResponse || {}).filter(([key]) => allowedKeys.includes(key)).map(([key, value], index) => ( // Filter by allowed keys
+                            Object.entries(ragResponse || {}).filter(([key]) => allowedKeys.includes(key)).map(([key, value], index) => (
                                 <div key={key} className="flex items-center bg-gray-100 p-3 rounded-lg shadow" style={{ opacity: contentOpacity, transition: `opacity 500ms ease-in-out ${index * 100}ms` }}>
                                     <div className="p-3 rounded-full bg-purple-500 text-white mr-4">
                                         {key === 'Seller' && <FaHome />}
