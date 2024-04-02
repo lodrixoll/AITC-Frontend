@@ -1,10 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaUserAlt, FaBuilding, FaPhone, FaEnvelope, FaUserTie, FaHome, FaPlusCircle } from 'react-icons/fa';
 
-const TransactionCard = ({ isLoading, ragResponse }) => {
+const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction }) => {
+    // Define a base class string for the card container
+    const baseClass = "border bg-white shadow-lg rounded-lg transition-all duration-1000 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl";
+    // Add conditional classes based on the expanded state
+    const expandedClass = expanded ? "max-h-screen p-6" : "max-h-24 p-4";
+    const pointerClass = "cursor-pointer";
+    // State to control opacity for fade-in effect
+    const [contentOpacity, setContentOpacity] = useState(0);
+
+    useEffect(() => {
+        if (expanded) {
+            setContentOpacity(0); // Add this line
+            const timeoutId = setTimeout(() => setContentOpacity(1), 1000);
+            return () => clearTimeout(timeoutId);
+        } else {
+            setContentOpacity(0);
+        }
+    }, [expanded]);
+
+    if (!expanded) {
+        return (
+            <div className={`${baseClass} ${expandedClass} ${pointerClass}`} onClick={toggleTransaction}>
+                <div className="flex justify-between items-center">
+                    <span className="text-xl font-bold">{ragResponse.address}</span>
+                    <span>▼</span>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="bg-white shadow-lg rounded-lg p-6 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl">
-            <div className="flex flex-wrap md:flex-nowrap -mx-4">
+        <div className={`${baseClass} ${expandedClass} ${pointerClass}`}>
+            <div className="flex flex-wrap md:flex-nowrap -mx-4" style={{ opacity: contentOpacity, transition: 'opacity 500ms ease-in-out' }}>
                 <div className="w-full md:w-1/2 px-4 mb-6 md:mb-0 relative">
                     <h3 className="text-xl font-bold text-gray-800 mb-4">Contacts</h3>
                     <div className="space-y-4">
@@ -20,8 +49,8 @@ const TransactionCard = ({ isLoading, ragResponse }) => {
                                         {key === 'Listing Agent' && <FaUserTie />}
                                         {key === 'Listing Broker' && <FaBuilding />}
                                         {key === 'Buyer' && <FaUserAlt />}
-                                        {key === 'Buyer\'s Agent' && <FaUserTie />}
-                                        {key === 'Buyer\'s Broker' && <FaBuilding />}
+                                        {key === "Buyer's Agent" && <FaUserTie />}
+                                        {key === "Buyer's Broker" && <FaBuilding />}
                                     </div>
                                     <div className="flex-grow">
                                         <p className="font-bold">{key.replace(/_/g, ' ')}</p>

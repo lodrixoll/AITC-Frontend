@@ -61,22 +61,10 @@ const Transactions = () => {
         <div className="p-10">
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Transactions</h2>
             <div className="grid grid-cols-1 gap-4">
-                {ragResponse && <TransactionCard isLoading={isLoading} ragResponse={ragResponse} />}
-                {staticTransactions.map(transaction => {
-                    const isExpanded = expandedTransactionId === transaction.id;
-                    return isExpanded ? (
-                        // Render the TransactionCard directly without additional wrapping when expanded
-                        <TransactionCard key={transaction.id} isLoading={false} ragResponse={transaction} />
-                    ) : (
-                        // Render the summary view with an option to expand
-                        <div key={transaction.id} className="border p-4 bg-white shadow-lg rounded-lg cursor-pointer transition duration-500 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl" onClick={() => toggleTransaction(transaction.id)}>
-                            <div className="flex justify-between items-center">
-                                <span className="text-xl font-bold">{transaction.address}</span>
-                                <span>▼</span>
-                            </div>
-                        </div>
-                    );
-                })}
+                {ragResponse && <TransactionCard isLoading={isLoading} ragResponse={ragResponse} expanded={true} />}
+                {staticTransactions.map(transaction => (
+                    <TransactionCard key={transaction.id} isLoading={false} ragResponse={transaction} expanded={expandedTransactionId === transaction.id} toggleTransaction={() => toggleTransaction(transaction.id)} />
+                ))}
             </div>
         </div>
     );
