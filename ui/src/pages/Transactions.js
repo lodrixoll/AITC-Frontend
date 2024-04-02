@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import TransactionCard from '../components/TransactionCard';
+import TransactionModal from '../components/TransactionModal';
+import { FaPlus } from 'react-icons/fa';
 
 const Transactions = () => {
     const [ragResponse, setRagResponse] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [expandedTransactionId, setExpandedTransactionId] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const location = useLocation();
     const lastUniqueIdRef = useRef(null);
     const debounceRef = useRef(null);
@@ -21,6 +24,10 @@ const Transactions = () => {
 
     const toggleTransaction = (id) => {
         setExpandedTransactionId(expandedTransactionId === id ? null : id);
+    };
+
+    const addNewTransaction = () => { // Function to toggle modal visibility
+        setIsModalOpen(true);
     };
 
     useEffect(() => {
@@ -60,12 +67,16 @@ const Transactions = () => {
     return (
         <div className="p-10">
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Transactions</h2>
+            <button onClick={addNewTransaction} className="my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <FaPlus className="inline mr-2" />Add New Transaction
+            </button>
             <div className="grid grid-cols-1 gap-4">
                 {ragResponse && <TransactionCard isLoading={isLoading} ragResponse={ragResponse} expanded={true} />}
                 {staticTransactions.map(transaction => (
                     <TransactionCard key={transaction.id} isLoading={false} ragResponse={transaction} expanded={expandedTransactionId === transaction.id} toggleTransaction={() => toggleTransaction(transaction.id)} />
                 ))}
             </div>
+            <TransactionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
     );
 }
