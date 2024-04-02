@@ -1,43 +1,80 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 
-// Sample transactions data
-const transactions = [
-    { id: 1, date: '2023-04-01', type: 'Deposit', amount: '$1,000', status: 'Completed' },
-    { id: 2, date: '2023-04-03', type: 'Withdrawal', amount: '$200', status: 'Pending' },
-    { id: 3, date: '2023-04-05', type: 'Payment', amount: '$150', status: 'Completed' },
-    { id: 4, date: '2023-04-07', type: 'Deposit', amount: '$2,500', status: 'Failed' },
-];
+const Transactions = () => {
+    const [ragResponse, setRagResponse] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const location = useLocation();
+    const lastUniqueIdRef = useRef(null);
+    const debounceRef = useRef(null);
 
-function Transactions() {
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const uniqueId = queryParams.get('uniqueId');
+
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+
+        debounceRef.current = setTimeout(() => {
+            if (uniqueId && uniqueId !== lastUniqueIdRef.current) {
+                setIsLoading(true);
+                fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ uniqueId }),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    setRagResponse(data);
+                    setIsLoading(false);
+                    lastUniqueIdRef.current = uniqueId;
+                })
+                .catch(error => {
+                    console.error('Failed to fetch RAG response:', error);
+                    setIsLoading(false);
+                });
+            }
+        }, 500);
+
+        return () => {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+        };
+    }, [location.search]);
+
     return (
         <div className="p-10">
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Transactions</h2>
-            <div className="overflow-x-auto">
-                <table className="min-w-full table-auto">
-                    <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                        <tr>
-                            <th className="py-3 px-6 text-left">Date</th>
-                            <th className="py-3 px-6 text-left">Type</th>
-                            <th className="py-3 px-6 text-right">Amount</th>
-                            <th className="py-3 px-6 text-center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody className="text-gray-600 text-sm font-light">
-                        {transactions.map((transaction) => (
-                            <tr key={transaction.id} className="border-b border-gray-200 hover:bg-gray-100">
-                                <td className="py-3 px-6 text-left whitespace-nowrap">{transaction.date}</td>
-                                <td className="py-3 px-6 text-left">{transaction.type}</td>
-                                <td className="py-3 px-6 text-right">{transaction.amount}</td>
-                                <td className="py-3 px-6 text-center">
-                                    <span className={`py-1 px-3 rounded-full text-xs ${transaction.status === 'Completed' ? 'bg-green-200 text-green-600' : transaction.status === 'Pending' ? 'bg-yellow-200 text-yellow-600' : 'bg-red-200 text-red-600'}`}>
-                                        {transaction.status}
-                                    </span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+            {isLoading ? (
+                <div className="flex justify-center items-center">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+                </div>
+            ) : ragResponse ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white shadow-lg rounded-lg p-6">
+                        <h3 className="text-xl font-bold text-gray-800 mb-4">Contacts</h3>
+                        <ul>
+                            {Object.entries(ragResponse).map(([key, value]) => (
+                                <li key={key} className="mb-2"><strong>{key.replace(/_/g, ' ')}:</strong> {value}</li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="bg-white shadow-lg rounded-lg p-6">
+                        <h3 className="text-xl font-bold text-gray-800 mb-4">Property Details</h3>
+                        {/* Add your property details here */}
+                        <p>Details to be defined...</p>
+                    </div>
+                </div>
+            ) : null}
         </div>
     );
 }

@@ -6,8 +6,6 @@ import { useNavigate } from 'react-router-dom';
 const TransactionModal = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
     const [uploading, setUploading] = useState(false);
-    // Placeholder variable to store the RAG response
-    const [ragResponse, setRagResponse] = useState(null);
 
     const onDrop = useCallback(acceptedFiles => {
         setUploading(true);
@@ -26,27 +24,10 @@ const TransactionModal = ({ isOpen, onClose }) => {
             return response.json(); // Assuming the server responds with JSON
         })
         .then(data => {
-            // Call the RAG route with the uniqueId received from the upload
-            return fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ uniqueId: data.uniqueId }),
-            });
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); // Assuming the server responds with JSON
-        })
-        .then(data => {
-            // Store the RAG response in the placeholder variable
-            setRagResponse(data);
             setUploading(false);
             onClose();
-            navigate('/transactions');
+            // Navigate to transactions with uniqueId as a query parameter
+            navigate(`/transactions?uniqueId=${data.uniqueId}`);
         })
         .catch(() => {
             setUploading(false);
