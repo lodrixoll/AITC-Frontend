@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 const TransactionModal = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
     const [uploading, setUploading] = useState(false);
+    // Placeholder variable to store the RAG response
+    const [ragResponse, setRagResponse] = useState(null);
 
     const onDrop = useCallback(acceptedFiles => {
         setUploading(true);
@@ -16,7 +18,6 @@ const TransactionModal = ({ isOpen, onClose }) => {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/upload`, {
             method: 'POST',
             body: formData,
-            // No need to set Content-Type in fetch with FormData
         })
         .then(response => {
             if (!response.ok) {
@@ -24,7 +25,25 @@ const TransactionModal = ({ isOpen, onClose }) => {
             }
             return response.json(); // Assuming the server responds with JSON
         })
-        .then(() => {
+        .then(data => {
+            // Call the RAG route with the uniqueId received from the upload
+            return fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ uniqueId: data.uniqueId }),
+            });
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Assuming the server responds with JSON
+        })
+        .then(data => {
+            // Store the RAG response in the placeholder variable
+            setRagResponse(data);
             setUploading(false);
             onClose();
             navigate('/transactions');
