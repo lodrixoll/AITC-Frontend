@@ -44,7 +44,7 @@ const Transactions = () => {
     const addTransaction = async (uniqueId) => {
         setIsLoading(true);
         try {
-            const ragResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag/static`, {
+            const ragResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
