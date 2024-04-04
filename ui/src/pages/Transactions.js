@@ -17,7 +17,7 @@ const Transactions = () => {
         setExpandedTransactionId(expandedTransactionId === id ? null : id);
     };
 
-    const addNewTransaction = () => { // Function to toggle modal visibility
+    const openAddTransactionModal = () => { // Function to toggle modal visibility
         setIsModalOpen(true);
     };
 
@@ -41,18 +41,57 @@ const Transactions = () => {
         }
     };
 
-    useEffect(() => {
+    const addTransactionFromRAG = async (uniqueId) => {
         setIsLoading(true);
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/transactions`)
-            .then(response => response.json())
-            .then(data => {
-                setTransactions(data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error('Failed to fetch transactions:', error);
-                setIsLoading(false);
+        try {
+            const ragResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag/static`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ uniqueId }),
+            }).then(response => response.json());
+
+            // Save the fetched RAG content to the database
+            const saveResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/transactions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ragResponse),
             });
+
+            if (saveResponse.ok) {
+                const savedTransaction = await saveResponse.json();
+                setTransactions(prev => [savedTransaction, ...prev]);
+                setExpandedTransactionId(savedTransaction.id || savedTransaction._id);
+            } else {
+                console.error('Failed to save RAG content to database');
+            }
+
+            setIsLoading(false);
+            lastUniqueIdRef.current = uniqueId;
+        } catch (error) {
+            console.error('Failed to fetch RAG response or save to database:', error);
+            setIsLoading(false);
+        }
+    };
+
+    const fetchTransactions = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/transactions`);
+            const data = await response.json();
+            setTransactions(data);
+        } catch (error) {
+            console.error('Failed to fetch transactions:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchTransactions();
 
         const queryParams = new URLSearchParams(location.search);
         const uniqueId = queryParams.get('uniqueId');
@@ -63,24 +102,7 @@ const Transactions = () => {
 
         debounceRef.current = setTimeout(() => {
             if (uniqueId && uniqueId !== lastUniqueIdRef.current) {
-                setIsLoading(true);
-                fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag/static`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ uniqueId }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    setTransactions(prev => [data, ...prev]);
-                    setIsLoading(false);
-                    lastUniqueIdRef.current = uniqueId;
-                })
-                .catch(error => {
-                    console.error('Failed to fetch RAG response:', error);
-                    setIsLoading(false);
-                });
+                addTransactionFromRAG(uniqueId);
             }
         }, 500);
 
@@ -90,7 +112,7 @@ const Transactions = () => {
     return (
         <div className="p-10">
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Transactions</h2>
-            <button onClick={addNewTransaction} className="my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button onClick={openAddTransactionModal} className="my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 <FaPlus className="inline mr-2" />Add New Transaction
             </button>
             <div className="grid grid-cols-1 gap-4">

@@ -32,10 +32,10 @@ const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction, 
     return (
         <div className={`${baseClass} ${expandedClass} ${pointerClass}`}>
             <div className="flex justify-between">
-                <h3 className="text-xl font-bold text-gray-800">Transaction Details</h3>
+                <h3 className="text-xl font-bold text-gray-800">{ragResponse.address}</h3>
                 <FaTimes className="cursor-pointer" onClick={toggleTransaction} />
             </div>
-            <div className="flex flex-wrap md:flex-nowrap -mx-4" style={{ opacity: contentOpacity, transition: 'opacity 200ms ease-in-out' }}>
+            <div className="flex flex-wrap md:flex-nowrap -mx-4 mt-6" style={{ opacity: contentOpacity, transition: 'opacity 200ms ease-in-out' }}>
                 <div className="w-full md:w-1/2 px-4 mb-6 md:mb-0 relative">
                     <h3 className="text-xl font-bold text-gray-800 mb-4">Contacts</h3>
                     <div className="space-y-4">
