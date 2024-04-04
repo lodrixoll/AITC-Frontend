@@ -28,7 +28,7 @@ const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction, 
                         </div>
                         <div>
                             <span className="text-xl font-bold">{ragResponse.address}</span>
-                            <span className="block text-sm text-gray-500 ml-2">$100,000</span>
+                            <span className="block text-sm text-gray-500 ml-2">{ragResponse.price}</span>
                         </div>
                     </div>
                     <div className="flex items-center">
@@ -91,7 +91,7 @@ const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction, 
                     <div className="bg-gray-100 p-3 rounded-lg shadow-inner">
                         <div className="flex items-center mb-4">
                             <FaRegMoneyBillAlt className="text-green-500 mr-2" />
-                            <span>$100,000</span>
+                            <span>{ragResponse.price}</span>
                         </div>
                         <div className="w-full bg-gray-300 rounded-full h-2.5 dark:bg-gray-700">
                             <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "50%" }}></div>
