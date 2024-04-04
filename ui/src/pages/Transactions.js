@@ -113,21 +113,38 @@ const Transactions = () => {
 
     return (
         <div className="p-10">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">Transactions</h2>
-            <button onClick={openAddTransactionModal} className="my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                <FaPlus className="inline mr-2" />Add New Transaction
-            </button>
-            <div className="grid grid-cols-1 gap-4">
-                {transactions.map(transaction => (
-                    <TransactionCard 
-                        key={transaction._id} 
-                        isLoading={isLoading} 
-                        ragResponse={transaction} 
-                        expanded={expandedTransactionId === transaction._id} 
-                        toggleTransaction={() => toggleTransaction(transaction._id)} 
-                        onDelete={deleteTransaction} 
-                    />
-                ))}
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Overview</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="bg-white rounded-lg shadow p-6">
+                    <h3 className="text-xl font-semibold text-gray-800">Active Transactions</h3>
+                    <p className="text-lg text-gray-600 mt-2">42</p>
+                </div>
+                <div className="bg-white rounded-lg shadow p-6">
+                    <h3 className="text-xl font-semibold text-gray-800">Pending Transactions</h3>
+                    <p className="text-lg text-gray-600 mt-2">17</p>
+                </div>
+                <div className="bg-white rounded-lg shadow p-6">
+                    <h3 className="text-xl font-semibold text-gray-800">New Messages</h3>
+                    <p className="text-lg text-gray-600 mt-2">5</p>
+                </div>
+            </div>
+            <div className="mt-8">
+                <h3 className="text-3xl font-bold text-gray-800 mb-6">Transactions</h3>
+                <button onClick={openAddTransactionModal} className="my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <FaPlus className="inline mr-2" />Add New Transaction
+                </button>
+                <div className="grid grid-cols-1 gap-4">
+                    {transactions.map(transaction => (
+                        <TransactionCard 
+                            key={transaction._id} 
+                            isLoading={isLoading} 
+                            ragResponse={transaction} 
+                            expanded={expandedTransactionId === transaction._id} 
+                            toggleTransaction={() => toggleTransaction(transaction._id)} 
+                            onDelete={deleteTransaction} 
+                        />
+                    ))}
+                </div>
             </div>
             <TransactionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
