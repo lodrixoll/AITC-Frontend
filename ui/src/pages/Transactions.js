@@ -17,7 +17,7 @@ const Transactions = () => {
         setExpandedTransactionId(expandedTransactionId === id ? null : id);
     };
 
-    const openAddTransactionModal = () => { // Function to toggle modal visibility
+    const openAddTransactionModal = () => {
         setIsModalOpen(true);
     };
 
