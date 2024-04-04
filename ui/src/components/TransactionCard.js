@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaUserAlt, FaBuilding, FaPhone, FaEnvelope, FaUserTie, FaHome, FaPlusCircle, FaTrash, FaTimes } from 'react-icons/fa';
+import { FaUserAlt, FaBuilding, FaPhone, FaEnvelope, FaUserTie, FaHome, FaPlusCircle, FaTrash, FaTimes, FaRegMoneyBillAlt} from 'react-icons/fa';
 
 const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction, onDelete }) => {
     const baseClass = "border bg-white shadow-lg rounded-lg transition-all duration-1000 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl";
@@ -22,8 +22,19 @@ const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction, 
         return (
             <div className={`${baseClass} ${expandedClass} ${pointerClass}`} onClick={toggleTransaction}>
                 <div className="flex justify-between items-center">
-                    <span className="text-xl font-bold">{ragResponse.address}</span>
-                    <FaTrash className="cursor-pointer text-red-500" onClick={(e) => { e.stopPropagation(); onDelete(ragResponse.id || ragResponse._id); }} />
+                    <div className="flex" style={{ minWidth: '90%' }}> {/* Adjusted line */}
+                        <div className="flex items-center mr-2">
+                            <FaRegMoneyBillAlt className="text-green-500 text-3xl" />
+                        </div>
+                        <div>
+                            <span className="text-xl font-bold">{ragResponse.address}</span>
+                            <span className="block text-sm text-gray-500 ml-2">$100,000</span>
+                        </div>
+                    </div>
+                    <div className="flex items-center">
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">In Progress</span>
+                    </div>
+                    <FaTrash className=" cursor-pointer text-red-500" onClick={(e) => { e.stopPropagation(); onDelete(ragResponse._id); }} />
                 </div>
             </div>
         );
@@ -76,9 +87,16 @@ const TransactionCard = ({ isLoading, ragResponse, expanded, toggleTransaction, 
                     </div>
                 </div>
                 <div className="w-full md:w-1/2 px-4">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">Property Details</h3>
+                    <h3 className="text-xl font-bold text-gray-800 mb-4">Transaction Details</h3>
                     <div className="bg-gray-100 p-3 rounded-lg shadow-inner">
-                        <p>Details to be defined...</p>
+                        <div className="flex items-center mb-4">
+                            <FaRegMoneyBillAlt className="text-green-500 mr-2" />
+                            <span>$100,000</span>
+                        </div>
+                        <div className="w-full bg-gray-300 rounded-full h-2.5 dark:bg-gray-700">
+                            <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "50%" }}></div>
+                        </div>
+                        <p className="text-gray-600 mt-2">Status: In Progress</p>
                     </div>
                 </div>
             </div>
