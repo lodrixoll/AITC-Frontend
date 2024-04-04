@@ -32,7 +32,7 @@ const Transactions = () => {
             if (response.ok) {
                 console.log(data.message);
                 // Remove the deleted transaction from the state
-                setTransactions(transactions.filter(transaction => transaction.id !== id && transaction._id !== id));
+                setTransactions(transactions.filter(transaction => transaction._id !== id));
             } else {
                 console.error(data.message);
             }
@@ -64,7 +64,7 @@ const Transactions = () => {
             if (saveResponse.ok) {
                 const savedTransaction = await saveResponse.json();
                 setTransactions(prev => [savedTransaction, ...prev]);
-                setExpandedTransactionId(savedTransaction.id || savedTransaction._id);
+                setExpandedTransactionId(savedTransaction._id);
             } else {
                 console.error('Failed to save RAG content to database');
             }
@@ -120,11 +120,11 @@ const Transactions = () => {
             <div className="grid grid-cols-1 gap-4">
                 {transactions.map(transaction => (
                     <TransactionCard 
-                        key={transaction.id || transaction._id} 
+                        key={transaction._id} 
                         isLoading={isLoading} 
                         ragResponse={transaction} 
-                        expanded={expandedTransactionId === transaction.id || expandedTransactionId === transaction._id} 
-                        toggleTransaction={() => toggleTransaction(transaction.id || transaction._id)} 
+                        expanded={expandedTransactionId === transaction._id} 
+                        toggleTransaction={() => toggleTransaction(transaction._id)} 
                         onDelete={deleteTransaction} 
                     />
                 ))}
