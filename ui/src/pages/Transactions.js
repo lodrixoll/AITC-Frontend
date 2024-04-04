@@ -41,7 +41,7 @@ const Transactions = () => {
         }
     };
 
-    const addTransactionFromRAG = async (uniqueId) => {
+    const addTransaction = async (uniqueId) => {
         setIsLoading(true);
         try {
             const ragResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag/static`, {
@@ -102,7 +102,7 @@ const Transactions = () => {
 
         debounceRef.current = setTimeout(() => {
             if (uniqueId && uniqueId !== lastUniqueIdRef.current) {
-                addTransactionFromRAG(uniqueId);
+                addTransaction(uniqueId);
             }
         }, 500);
 
