@@ -91,18 +91,20 @@ const Transactions = () => {
     };
 
     useEffect(() => {
+        // On page load, fetch transactions
         fetchTransactions();
 
+        // Check if adding a new transaction with uniqueId query parameter
         const queryParams = new URLSearchParams(location.search);
         const uniqueId = queryParams.get('uniqueId');
 
+        // add new transaction with debounding
         if (debounceRef.current) {
             clearTimeout(debounceRef.current);
         }
-
         debounceRef.current = setTimeout(() => {
             if (uniqueId && uniqueId !== lastUniqueIdRef.current) {
-                addTransaction(uniqueId);
+                addTransaction(uniqueId); // Add transaction with uniqueId
             }
         }, 500);
 
