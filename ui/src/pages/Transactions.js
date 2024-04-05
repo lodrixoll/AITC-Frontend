@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import TransactionCard from '../components/TransactionCard';
 import TransactionModal from '../components/TransactionModal';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaSpinner } from 'react-icons/fa';
 
 const Transactions = () => {
     const [transactions, setTransactions] = useState([]);
@@ -135,6 +135,11 @@ const Transactions = () => {
                         <FaPlus className="inline mr-2" />Add New Transaction
                     </button>
                 </div>
+                {isLoading && (
+                    <div className="text-center py-4">
+                        <FaSpinner className="animate-spin inline-block w-8 h-8" aria-hidden="true" />
+                    </div>
+                )}
                 <div className="grid grid-cols-1 gap-4">
                     {transactions.map(transaction => (
                         <TransactionCard 
