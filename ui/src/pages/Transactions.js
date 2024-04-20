@@ -44,7 +44,7 @@ const Transactions = () => {
     const addTransaction = async (uniqueId) => {
         setIsLoading(true);
         try {
-            const ragResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag`, {
+            const transactionDetails = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const Transactions = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(ragResponse),
+                body: JSON.stringify(transactionDetails),
             });
 
             if (saveResponse.ok) {
@@ -145,7 +145,7 @@ const Transactions = () => {
                         <TransactionCard 
                             key={transaction._id} 
                             isLoading={isLoading} 
-                            ragResponse={transaction} 
+                            transactionDetails={transaction} 
                             expanded={expandedTransactionId === transaction._id} 
                             toggleTransaction={() => toggleTransaction(transaction._id)} 
                             onDelete={deleteTransaction} 

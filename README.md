@@ -1,12 +1,13 @@
 AITC-Frontend
 ====================
-Welcome to the AITC-Frontend repository. This project is a React-based application designed to provide a comprehensive dashboard for managing transactions, emails, calendar events, and more. It leverages TailwindCSS for styling and includes a variety of features such as authentication, dynamic routing, and form handling.
-
+Welcome to the AITC-Frontend repository. This project is a React-based application designed to provide a comprehensive dashboard for managing real estate transactions, emails, calendar events, and more. It leverages TailwindCSS for styling and includes a variety of features such as authentication, dynamic routing, and form handling.
+r
+n
 
 To Do
 ---------------
 - [ ] fix page refresh authentication bug
-- [ ] Transactions page frontend
+- [x] Transactions page frontend
 
 
 Branching Strategy
@@ -66,7 +67,7 @@ This will launch the application on <http://localhost:3000>, where you can view 
 Vercel
 
 ```
-Vercel
+To do
 
 ```
 
