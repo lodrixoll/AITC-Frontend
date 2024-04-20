@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { FaUserAlt, FaBuilding, FaPhone, FaEnvelope, FaUserTie, FaHome, FaPlusCircle, FaTrash, FaTimes, FaRegMoneyBillAlt } from 'react-icons/fa';
+import TaskList from './TaskList';
 
 const TransactionCard = ({ isLoading, transactionDetails, expanded, toggleTransaction, onDelete}) => {
     const baseClass = "border bg-white shadow-lg rounded-lg transition-all duration-1000 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl";
@@ -7,6 +8,17 @@ const TransactionCard = ({ isLoading, transactionDetails, expanded, toggleTransa
     const pointerClass = "cursor-pointer";
     const [contentOpacity, setContentOpacity] = useState(0);
     const [contacts, setContacts] = useState([]);
+
+    const sampleTasks = [
+        { id: 1, title: "Contract Date", completed: true, date: "2/5/2024" },
+        { id: 2, title: "MUTUAL ACCEPTANCE (form 28)", completed: true, date: "2/6/2024" },
+        { id: 3, title: "Seller’s Deadline to Deliver Utility Information (form 22K)", completed: true, date: "Satisfied" },
+        { id: 4, title: "Seller’s Deadline to Deliver the FIRPTA Certification via Form 22E to Closing Agent (form 28, par. j.)", completed: true, date: "Satisfied" },
+        { id: 5, title: "Buyer’s Home Inspection Contingency (form 35, par. 3)", completed: true, date: "Satisfied" },
+        { id: 6, title: "Buyer’s Right to Revoke Offer Based-On Seller Disclosure (form 17)", completed: true, date: "Waived" },
+        { id: 7, title: "Buyer’s Deadline to Deliver Earnest Money to Closing Agent (form 28, par. b.)", completed: false, date: "2/9/2024" },
+        { id: 8, title: "Buyer’s Information Verification Period Deadline (form 28, par. w.)", completed: false, date: "2/12/2024" },
+    ];
 
     const fetchContacts = useCallback(async () => {
         try {
@@ -77,28 +89,27 @@ const TransactionCard = ({ isLoading, transactionDetails, expanded, toggleTransa
                             contacts.map((contact, index) => (
                                 <div key={contact._id} className="flex items-center bg-gray-100 p-3 rounded-lg shadow" style={{ opacity: contentOpacity, transition: `opacity 500ms ease-in-out ${index * 100}ms` }}>
                                     <div className="p-3 rounded-full bg-purple-500 text-white mr-4">
-                                        {contact.role === 'Buyer Broker' && <FaHome />}
+                                        {contact.role === 'Buyer Broker' && <FaUserTie />}
                                         {contact.role === 'Transaction Coordinator' && <FaUserTie />}
-                                        {contact.role === 'Listing Broker' && <FaBuilding />}
-                                        {contact.role === 'Escrow' && <FaUserAlt />}
-                                        {contact.role === "Title" && <FaUserTie />}
+                                        {contact.role === 'Listing Broker' && <FaUserTie />}
+                                        {contact.role === 'Escrow' && <FaBuilding />}
+                                        {contact.role === "Title" && <FaBuilding />}
                                         {contact.role === "Lender" && <FaBuilding />}
-                                        {contact.role === "HOA" && <FaBuilding />}
+                                        {contact.role === "HOA" && <FaHome />}
                                     </div>
                                     <div className="flex-grow">
                                         <p className="font-bold">{contact.name}</p>
-                                        <p>{contact.email}</p>
-                                        <p>{contact.phone}</p>
+                                        <p>{contact.role}</p>
                                     </div>
                                     <div className="flex flex-col justify-center items-end">
                                         <div className="flex items-center text-sm text-gray-600 mb-1">
                                             <FaEnvelope className="inline mr-2" />
-                                            <span className="mr-2">{contact.email ? 'Update email' : 'Add email'}</span>
+                                            <span className="mr-2">{contact.email ? contact.email : 'Add email'}</span>
                                             <FaPlusCircle className="cursor-pointer text-green-500" />
                                         </div>
                                         <div className="flex items-center text-sm text-gray-600">
                                             <FaPhone className="inline mr-2" />
-                                            <span className="mr-2">{contact.phone ? 'Update phone' : 'Add phone'}</span>
+                                            <span className="mr-2">{contact.phone ? contact.phone : 'Add phone'}</span>
                                             <FaPlusCircle className="cursor-pointer text-green-500" />
                                         </div>
                                     </div>
@@ -108,17 +119,11 @@ const TransactionCard = ({ isLoading, transactionDetails, expanded, toggleTransa
                     </div>
                 </div>
                 <div className="w-full md:w-1/2 px-4">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">Transaction Details</h3>
-                    <div className="bg-gray-100 p-3 rounded-lg shadow-inner">
-                        <div className="flex items-center mb-4">
-                            <FaRegMoneyBillAlt className="text-green-500 mr-2" />
-                            <span>{transactionDetails.PurchasePrice}</span>
-                        </div>
-                        <div className="w-full bg-gray-300 rounded-full h-2.5 dark:bg-gray-700">
-                            <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "50%" }}></div>
-                        </div>
-                        <p className="text-gray-600 mt-2">Status: In Progress</p>
-                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-4">Transaction Task List</h3>
+                    <TaskList tasks={sampleTasks} onToggleComplete={(id) => {
+                        // Here you would handle the toggle logic, possibly updating state or making an API call
+                        console.log(`Toggled task ${id}`);
+                    }} />
                 </div>
             </div>
         </div>
