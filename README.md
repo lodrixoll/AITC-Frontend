@@ -72,7 +72,4 @@ Project Structure
 	+ `App.js`: The main application component.
 	+ `index.js`: Entry point for the React application.
 * `public/`: Public assets and the `index.html` file.
-* `.gitignore`: Specifies intentionally untracked files to ignore.
-* `package.json`: Defines the project dependencies and scripts.
-* `tailwind.config.js`: Configuration for TailwindCSS.
 
