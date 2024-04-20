@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import TransactionCard from '../components/TransactionCard';
 import TransactionModal from '../components/TransactionModal';
 import { FaPlus, FaSpinner } from 'react-icons/fa';
+import LoadingModal from '../components/LoadingModal';
 
 const Transactions = () => {
     const [transactions, setTransactions] = useState([]);
@@ -44,7 +45,19 @@ const Transactions = () => {
     const addTransaction = async (uniqueId) => {
         setIsLoading(true);
         try {
-            const transactionDetails = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/rag`, {
+            const validationDetails = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/documents/validate/testing`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ uniqueId }),
+            }).then(response => response.json());
+
+            console.log(validationDetails);
+            // setIsLoading(false);
+            return;
+
+            const transactionDetails = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/documents/validate/testing`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -112,49 +125,47 @@ const Transactions = () => {
     }, [location.search]);
 
     return (
-        <div className="p-10">
-            <h3 className="text-3xl font-bold text-gray-800 mb-6">Overview</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-white rounded-lg shadow p-6">
-                    <h3 className="text-xl font-semibold text-gray-800">Active Transactions</h3>
-                    <p className="text-lg text-gray-600 mt-2">{transactions.length}</p>
-                </div>
-                <div className="bg-white rounded-lg shadow p-6">
-                    <h3 className="text-xl font-semibold text-gray-800">Pending Transactions</h3>
-                    <p className="text-lg text-gray-600 mt-2">2</p>
-                </div>
-                <div className="bg-white rounded-lg shadow p-6">
-                    <h3 className="text-xl font-semibold text-gray-800">Completed Transactions</h3>
-                    <p className="text-lg text-gray-600 mt-2">19</p>
-                </div>
-            </div>
-            <div className="mt-8">
-                <div className="flex justify-between items-center mt-8 mb-4">
-                    <h3 className="text-3xl font-bold text-gray-800">Transactions</h3>
-                    <button onClick={openAddTransactionModal} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        <FaPlus className="inline mr-2" />Add New Transaction
-                    </button>
-                </div>
-                {isLoading && (
-                    <div className="text-center py-4">
-                        <FaSpinner className="animate-spin inline-block w-8 h-8" aria-hidden="true" />
+        <>
+            <LoadingModal title={"testing"} show={true}/>
+            <div className="p-10">
+                <h3 className="text-3xl font-bold text-gray-800 mb-6">Overview</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="bg-white rounded-lg shadow p-6">
+                        <h3 className="text-xl font-semibold text-gray-800">Active Transactions</h3>
+                        <p className="text-lg text-gray-600 mt-2">{transactions.length}</p>
                     </div>
-                )}
-                <div className="grid grid-cols-1 gap-4">
-                    {transactions.map(transaction => (
-                        <TransactionCard 
-                            key={transaction._id} 
-                            isLoading={isLoading} 
-                            transactionDetails={transaction} 
-                            expanded={expandedTransactionId === transaction._id} 
-                            toggleTransaction={() => toggleTransaction(transaction._id)} 
-                            onDelete={deleteTransaction} 
-                        />
-                    ))}
+                    <div className="bg-white rounded-lg shadow p-6">
+                        <h3 className="text-xl font-semibold text-gray-800">Pending Transactions</h3>
+                        <p className="text-lg text-gray-600 mt-2">2</p>
+                    </div>
+                    <div className="bg-white rounded-lg shadow p-6">
+                        <h3 className="text-xl font-semibold text-gray-800">Completed Transactions</h3>
+                        <p className="text-lg text-gray-600 mt-2">19</p>
+                    </div>
                 </div>
+                <div className="mt-8">
+                    <div className="flex justify-between items-center mt-8 mb-4">
+                        <h3 className="text-3xl font-bold text-gray-800">Transactions</h3>
+                        <button onClick={openAddTransactionModal} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            <FaPlus className="inline mr-2" />Add New Transaction
+                        </button>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4">
+                        {transactions.map(transaction => (
+                            <TransactionCard 
+                                key={transaction._id} 
+                                isLoading={isLoading} 
+                                transactionDetails={transaction} 
+                                expanded={expandedTransactionId === transaction._id} 
+                                toggleTransaction={() => toggleTransaction(transaction._id)} 
+                                onDelete={deleteTransaction} 
+                            />
+                        ))}
+                    </div>
+                </div>
+                <TransactionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
             </div>
-            <TransactionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-        </div>
+        </>
     );
 }
 

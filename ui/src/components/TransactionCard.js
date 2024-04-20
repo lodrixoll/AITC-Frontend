@@ -87,7 +87,8 @@ const TransactionCard = ({ isLoading, transactionDetails, expanded, toggleTransa
                 </div>
                 <FaTimes className="text-3xl text-red-500 cursor-pointer hover:text-red-700" onClick={toggleTransaction} />
             </div>
-            <div className="flex flex-wrap md:flex-nowrap -mx-4 mt-6" style={{ opacity: contentOpacity, transition: 'opacity 200ms ease-in-out' }}>
+            
+            <div className="flex flex-wrap md:flex-nowrap -mx-4 mt-6 h-64 overflow-y-scroll" style={{ opacity: contentOpacity, transition: 'opacity 200ms ease-in-out' }}>
                 <div className="w-full md:w-1/2 px-4 mb-6 md:mb-0 relative">
                     <h3 className="text-xl font-bold text-gray-800 mb-4">Contacts</h3>
                     <div className="space-y-4">
@@ -107,20 +108,22 @@ const TransactionCard = ({ isLoading, transactionDetails, expanded, toggleTransa
                                         {contact.role === "Lender" && <FaBuilding />}
                                         {contact.role === "HOA" && <FaHome />}
                                     </div>
-                                    <div className="flex-grow">
-                                        <p className="font-bold">{contact.name}</p>
-                                        <p>{contact.role}</p>
-                                    </div>
-                                    <div className="flex flex-col justify-center items-end">
-                                        <div className="flex items-center text-sm text-gray-600 mb-1">
-                                            <FaEnvelope className="inline mr-2" />
-                                            <span className="mr-2">{contact.email ? contact.email : 'Add email'}</span>
-                                            <FaPlusCircle className="cursor-pointer text-green-500" />
+                                    <div className='flex flex-col justify-center'>
+                                        <div className="flex-grow">
+                                            <p className="font-bold">{contact.name}</p>
+                                            <p>{contact.role}</p>
                                         </div>
-                                        <div className="flex items-center text-sm text-gray-600">
-                                            <FaPhone className="inline mr-2" />
-                                            <span className="mr-2">{contact.phone ? contact.phone : 'Add phone'}</span>
-                                            <FaPlusCircle className="cursor-pointer text-green-500" />
+                                        <div className="flex flex-col justify-center items-end">
+                                            <div className="flex items-center text-sm text-gray-600 mb-1">
+                                                <FaEnvelope className="inline mr-2" />
+                                                <span className="mr-2">{contact.email ? contact.email : 'Add email'}</span>
+                                                <FaPlusCircle className="cursor-pointer text-green-500" />
+                                            </div>
+                                            <div className="flex items-center text-sm text-gray-600">
+                                                <FaPhone className="inline mr-2" />
+                                                <span className="mr-2">{contact.phone ? contact.phone : 'Add phone'}</span>
+                                                <FaPlusCircle className="cursor-pointer text-green-500" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
