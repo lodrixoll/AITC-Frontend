@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { FaUserAlt, FaBuilding, FaPhone, FaEnvelope, FaUserTie, FaHome, FaPlusCircle, FaTrash, FaTimes, FaRegMoneyBillAlt } from 'react-icons/fa';
+import { FaBuilding, FaPhone, FaEnvelope, FaUserTie, FaHome, FaPlusCircle, FaTrash, FaTimes, FaRegMoneyBillAlt } from 'react-icons/fa';
 import TaskList from './TaskList';
 
 const TransactionCard = ({ isLoading, transactionDetails, expanded, toggleTransaction, onDelete}) => {
