@@ -1,22 +1,10 @@
 AITC-Frontend
 ====================
-Welcome to the AITC-Frontend repository. This project is a React-based application designed to provide a comprehensive dashboard for managing real estate transactions, emails, calendar events, and more. It leverages TailwindCSS for styling and includes a variety of features such as authentication, dynamic routing, and form handling.
-r
-n
+Welcome to the AITC-Frontend repository. This project is a react app for real estate transaction management. It leverages TailwindCSS for styling and includes a variety of features such as authentication, dynamic routing, and form handling.
 
 To Do
 ---------------
 - [ ] fix page refresh authentication bug
-- [x] Transactions page frontend
-
-
-Branching Strategy
----------------
-1. `production`: This is the main branch where the production-ready codebase resides. It should be the most stable and up-to-date version of the application.
-2. `staging`: This branch contains the latest development codebase. It is the branch where new features and bug fixes are developed and tested.
-3. `feature/<feature-name>`: These branches are used to develop new features. They are branched off from the `staging` branch and merged back into the `staging` branch once the feature is complete.
-4. `bugfix/<bugfix-name>`: These branches are used to fix bugs. They are branched off from the `staging` branch and merged back into the `staging` branch once the bug is fixed.
-
 
 Getting Started
 ---------------
@@ -41,7 +29,7 @@ npm install
 
 ### Environment
 
-You need to set the `REACT_APP_BACKEND_URL` environment variable to the URL of the backend server. This is used to make requests to the backend server.
+You need to set the `REACT_APP_BACKEND_URL` environment variable to the URL of the backend server. Create an env by copying the example file.
 
 ```
 cp .env.example .env
