@@ -77,13 +77,13 @@ const TransactionCard = ({ isLoading, transactionDetails, expanded, toggleTransa
             <div className="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow-lg">
                 <div className="flex flex-col justify-start">
                     <h3 className="text-3xl font-bold text-gray-800 mb-2">{transactionDetails.Address}</h3>
-                    <span className="text-lg text-gray-600">MLS #2196746: Issaquah, WA 98027</span>
+                    <span className="text-lg font-semibold text-gray-600">MLS #2196746: Issaquah, WA 98027</span>
                     <span className="text-lg font-semibold text-indigo-600">Purchase Price: {transactionDetails.PurchasePrice}</span>
                 </div>
                 <div className="flex flex-col justify-start">
-                    <span className="text-lg text-gray-600">Closing Date: 03/01/2024</span>
-                    <span className="text-lg font-semibold text-green-600">Buyer: {transactionDetails.Buyer}</span>
-                    <span className="text-lg font-semibold text-red-600">Seller: {transactionDetails.Seller}</span>
+                    <span className="text-lg font-bold text-gray-600">Closing Date: 03/01/2024</span>
+                    <span className="text-lg font-semibold text-gray-600">Buyer: {transactionDetails.Buyer}</span>
+                    <span className="text-lg font-semibold text-gray-600">Seller: {transactionDetails.Seller}</span>
                 </div>
                 <FaTimes className="text-3xl text-red-500 cursor-pointer hover:text-red-700" onClick={toggleTransaction} />
             </div>
