@@ -4,6 +4,7 @@ Welcome to the AITC-Frontend repository. This project is a react app for real es
 
 To Do
 ---------------
+- [ ] update add transaction to use new routes (validate & extract-details)
 - [ ] fix page refresh authentication bug
 
 Getting Started
