@@ -34,6 +34,7 @@ const TransactionCard = ({ isLoading, transactionDetails, expanded, toggleTransa
             console.log(contactDetails);
             setContacts(contactDetails);
         } catch (error) {
+            console.log(transactionDetails);
             console.error('Error fetching contacts:', error);
         }
     }, [transactionDetails.Contacts]); // Assuming transactionDetails.Contacts is stable or memoized elsewhere

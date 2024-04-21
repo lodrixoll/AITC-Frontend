@@ -8,11 +8,23 @@ import LoadingModal from '../components/LoadingModal';
 const Transactions = () => {
     const [transactions, setTransactions] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoading2, setIsLoading2] = useState(false);
     const [expandedTransactionId, setExpandedTransactionId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const location = useLocation();
     const lastUniqueIdRef = useRef(null);
     const debounceRef = useRef(null);
+    const initialCompletenes = {
+        "DISCLOSURE REGARDING REAL ESTATE AGENCY RELATIONSHIP": "incomplete",
+        "FAIR HOUSING AND DISCRIMINATION ADVISORY": "incomplete",
+        "POSSIBLE REPRESENTATION OF MORE THAN ONE BUYER OR SELLER": "incomplete",
+        "WIRE FRAUD AND TRANSFER ELECTRONIC FUNDS TRANSFER ADVISORY": "incomplete",
+        "BUYER HOMEOWNERS’ INSURANCE ADVISORY": "incomplete",
+        "CALIFORNIA RESIDENTIAL PURCHASE AGREEMENT AND JOINT ESCROW INSTRUCTIONS": "incomplete",
+        "BUYER’S INVESTIGATION ADVISORY": "incomplete",
+        "FAIR APPRAISAL ACT ADDENDUM": "incomplete",
+        "CALIFORNIA CONSUMER PRIVACY ACT ADVISORY, DISCLOSURE AND NOTICE": "incomplete",
+      };
 
     const toggleTransaction = (id) => {
         setExpandedTransactionId(expandedTransactionId === id ? null : id);
@@ -43,49 +55,48 @@ const Transactions = () => {
     };
 
     const addTransaction = async (uniqueId) => {
-        setIsLoading(true);
+        setIsLoading2(true);
         try {
-            const validationDetails = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/documents/validate/testing`, {
+            const validationDetails = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/documents/validate-all-static`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ uniqueId }),
-            }).then(response => response.json());
-
-            console.log(validationDetails);
-            // setIsLoading(false);
-            return;
-
-            const transactionDetails = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/documents/validate/testing`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ uniqueId }),
-            }).then(response => response.json());
-
-            // Save the fetched RAG content to the database
-            const saveResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/transactions`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(transactionDetails),
             });
 
-            if (saveResponse.ok) {
-                const savedTransaction = await saveResponse.json();
-                setTransactions(prev => [savedTransaction, ...prev]);
-                setExpandedTransactionId(savedTransaction._id);
-            } else {
-                console.error('Failed to save RAG content to database');
+            if(validationDetails.status === 200){
+                const transactionDetials = await validationDetails.json();
+                console.log(transactionDetials);
+                Object.keys(transactionDetials.results).forEach((page) => {
+                    if (initialCompletenes.hasOwnProperty(transactionDetials.results[page].title)) {
+                        // Update the value of the key in the initial object with the value from the new object
+                        initialCompletenes[transactionDetials.results[page].title] = transactionDetials.results[page].determination;
+                      }
+                })
+                console.log(initialCompletenes)
+                const saveResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/transactions/extract-data-static`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({uniqueId}),
+                });
+                setIsLoading2(false);
+
+                if (saveResponse.ok) {
+                    const savedTransaction = await saveResponse.json();
+                    setIsLoading(true);
+                    setTransactions(prev => [savedTransaction, ...prev]);
+                    setExpandedTransactionId(savedTransaction._id);
+                } else {
+                    alert('Failed to get response');
+                }
             }
 
-            setIsLoading(false);
             lastUniqueIdRef.current = uniqueId;
         } catch (error) {
-            console.error('Failed to fetch RAG response or save to database:', error);
+            console.error('Failed to add transaction to the database:', error);
             setIsLoading(false);
         }
     };
@@ -115,9 +126,9 @@ const Transactions = () => {
         if (debounceRef.current) {
             clearTimeout(debounceRef.current);
         }
-        debounceRef.current = setTimeout(() => {
+        debounceRef.current = setTimeout(async () => {
             if (uniqueId && uniqueId !== lastUniqueIdRef.current) {
-                addTransaction(uniqueId); // Add transaction with uniqueId
+                await addTransaction("66240b851f6ad7b4069273be"); // Add transaction with uniqueId
             }
         }, 500);
 
@@ -126,7 +137,9 @@ const Transactions = () => {
 
     return (
         <>
-            <LoadingModal title={"testing"} show={true}/>
+            {
+                (isLoading || isLoading2) && <LoadingModal title={"testing"} show={true} initialCompletenes={initialCompletenes} setIsLoading={setIsLoading} isLoading2={isLoading2}/>
+            }
             <div className="p-10">
                 <h3 className="text-3xl font-bold text-gray-800 mb-6">Overview</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -152,7 +165,7 @@ const Transactions = () => {
                     </div>
                     <div className="grid grid-cols-1 gap-4">
                         {transactions.map(transaction => (
-                            <TransactionCard 
+                            <TransactionCard
                                 key={transaction._id} 
                                 isLoading={isLoading} 
                                 transactionDetails={transaction} 
